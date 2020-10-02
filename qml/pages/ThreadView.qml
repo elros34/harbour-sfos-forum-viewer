@@ -205,7 +205,11 @@ Page {
                     textFormat: Text.RichText
                     wrapMode: Text.Wrap
                     font.pixelSize: Theme.fontSizeSmall
-                    onLinkActivated: pageStack.push("OpenLink.qml", {link: link});
+                    onLinkActivated: {
+                        if (link.indexOf("/") === 0)
+                            link = "https://forum.sailfishos.org/" + link
+                        pageStack.push("OpenLink.qml", {link: link})
+                    }
                 }
             }
             menu: ContextMenu {

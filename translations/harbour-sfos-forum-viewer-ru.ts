@@ -240,7 +240,7 @@ Special thanks to contributors:
         <translation>✍️: %1</translation>
     </message>
     <message>
-        <location filename="../qml/pages/ThreadView.qml" line="214"/>
+        <location filename="../qml/pages/ThreadView.qml" line="220"/>
         <source>Revision history</source>
         <translation>История правок</translation>
     </message>
