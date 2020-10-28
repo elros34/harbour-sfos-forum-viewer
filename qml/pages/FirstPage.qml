@@ -218,6 +218,7 @@ Page {
 
             property int lastPostNumber: postCountConfig.value(topicid, -1)
             property bool hasNews: (lastPostNumber > 0 && lastPostNumber < highest_post_number)
+            property var categoriesLookup: categories.lookup[category_id]
             // Component.onCompleted: console.debug("lastPostNumber [%1]:\tlast=%2\tnow=%3".arg(topicid).arg(lastPostNumber).arg(highest_post_number))
 
             Column {
@@ -311,7 +312,7 @@ Page {
 
                            Label {
                                visible: catRect.visible
-                               text: categories.lookup[category_id].name
+                               text: categoriesLookup  ? categoriesLookup.name : ""
                                wrapMode: Text.Wrap
                                elide: Text.ElideRight
                                width: dateLabel.width
@@ -324,7 +325,7 @@ Page {
                            Rectangle {
                                id: catRect
                                visible: tid === ""
-                               color: '#'+categories.lookup[category_id].color
+                               color: categoriesLookup ? '#'+categoriesLookup.color : "transparent"
                                width: 2*Theme.horizontalPageMargin
                                height: Theme.horizontalPageMargin/3
                                radius: 45

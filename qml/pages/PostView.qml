@@ -85,7 +85,7 @@ PullDownMenu{
                 textFormat: Text.RichText
                 wrapMode: Text.Wrap
                 font.pixelSize: Theme.fontSizeSmall
-                onLinkActivated: pageStack.push("OpenLink.qml", {link: link});
+                onLinkActivated: application.openLink(link);
             }
         }
     }

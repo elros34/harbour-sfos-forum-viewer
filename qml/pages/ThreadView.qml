@@ -133,10 +133,15 @@ Page {
 
         model: ListModel { id: commodel}
         delegate: ListItem {
-            enabled: menu.hasContent
+            id: listItem
+            enabled: menuHasContent
             width: parent.width
             contentHeight: delegateCol.height + Theme.paddingLarge
             anchors.horizontalCenter: parent.horizontalCenter
+
+            property bool showHistory: version > 1 && updated_at !== created_at
+            property bool showDetails: postTextLabel.contentWidth > postTextLabel.width
+            property bool menuHasContent: showHistory || showDetails
 
             Column {
                 id: delegateCol
@@ -197,6 +202,7 @@ Page {
                 }
 
                 Label {
+                    id: postTextLabel
                     text: "<style>" +
                           "a { color: %1 }".arg(Theme.highlightColor) +
                           "</style>" +
@@ -204,19 +210,37 @@ Page {
                     width: parent.width
                     textFormat: Text.RichText
                     wrapMode: Text.Wrap
+                    clip: commentpage.status !== PageStatus.Active
                     font.pixelSize: Theme.fontSizeSmall
-                    onLinkActivated: {
-                        if (link.indexOf("/") === 0)
-                            link = "https://forum.sailfishos.org/" + link
-                        pageStack.push("OpenLink.qml", {link: link})
-                    }
+                    onLinkActivated: application.openLink(link)
                 }
             }
-            menu: ContextMenu {
-                hasContent: version > 1 && updated_at !== created_at
-                MenuItem {
-                    text: qsTr("Revision history")
-                    onClicked: pageStack.push(Qt.resolvedUrl("PostView.qml"), {postid: postid, aTitle: aTitle, curRev: version});
+            menu: Component {
+                ContextMenu {
+                    id: contextMenu
+                    hasContent: menuHasContent
+                    MenuItem {
+                        text: qsTr("Revision history")
+                        visible: listItem.showHistory
+                        onClicked: pageStack.push(Qt.resolvedUrl("PostView.qml"), {postid: postid, aTitle: aTitle, curRev: version});
+                    }
+                    MenuItem {
+                        text: qsTr("Details")
+                        visible: listItem.showDetails
+                        onClicked: {
+                            pageStack.push(Qt.resolvedUrl("PostDetails.qml"), {
+                                               username: username,
+                                               created_at: created_at,
+                                               updated_at: updated_at,
+                                               version: version,
+                                               likes: likes,
+                                               postText:  "<style>" +
+                                                          "a { color: %1 }".arg(Theme.highlightColor) +
+                                                          "</style>" +
+                                                          "<p>" + cooked + "</p>"
+                                           })
+                        }
+                    }
                 }
             }
         }

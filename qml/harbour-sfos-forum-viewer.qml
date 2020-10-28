@@ -127,6 +127,12 @@ ApplicationWindow
         xhr.send();
     }
 
+    function openLink(link) {
+        if (link.indexOf("/") === 0)
+            link = "https://forum.sailfishos.org/" + link
+        pageStack.push("pages/OpenLink.qml", {link: link})
+    }
+
     Component.onCompleted: {
         categories.fetch();
         fetchLatestPosts();
